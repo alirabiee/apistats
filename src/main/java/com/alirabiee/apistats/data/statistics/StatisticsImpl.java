@@ -18,12 +18,12 @@ public class StatisticsImpl implements Statistics {
     private static final Logger log = LoggerFactory.getLogger(StatisticsImpl.class);
 
     private final StatElement[] elements; // holds transactions in each time-point
-    private int oldestTimeIndex; // transactions older than this will be discarded
-    private int newestTimeIndex;
-    private double txSum; // total sum of transactions over the configured time-range
-    private double txMax; // max transaction amount in total over the configured time-range
-    private double txMin; // min transaction amount in total over the configured time-range
-    private int txCount; // total number of transactions over the configured time-range
+    private volatile int oldestTimeIndex; // transactions older than this will be discarded
+    private volatile int newestTimeIndex;
+    private volatile double txSum; // total sum of transactions over the configured time-range
+    private volatile double txMax; // max transaction amount in total over the configured time-range
+    private volatile double txMin; // min transaction amount in total over the configured time-range
+    private volatile int txCount; // total number of transactions over the configured time-range
 
     private final ReadWriteLock dsLock = new ReentrantReadWriteLock(); // to synchronise access to the underlying datastructure
     private final ReadWriteLock reportLock = new ReentrantReadWriteLock(); // to synchronise access to the report data, tx*
@@ -129,7 +129,7 @@ public class StatisticsImpl implements Statistics {
     class StatElement {
         private MinMaxPriorityQueue<Transaction> transactions =
                 MinMaxPriorityQueue.create();
-        private double txSum = 0;
+        private volatile double txSum = 0;
 
         synchronized void clear() {
             transactions.clear();
