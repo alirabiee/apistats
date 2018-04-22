@@ -99,11 +99,8 @@ public class StatisticsImpl implements Statistics {
 
     @Scheduled(fixedRate = 1000)
     public void moveTimeline() {
-        dsLock.readLock().lock();
-        elements[oldestTimeIndex].clear();
-        dsLock.readLock().unlock();
-
         dsLock.writeLock().lock();
+        elements[oldestTimeIndex].clear();
         newestTimeIndex = (newestTimeIndex + 1) % elements.length;
         oldestTimeIndex = (oldestTimeIndex + 1) % elements.length;
         dsLock.writeLock().unlock();
