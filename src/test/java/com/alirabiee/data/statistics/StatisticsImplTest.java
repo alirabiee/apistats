@@ -92,7 +92,7 @@ public class StatisticsImplTest {
     @Test
     public void testMoveTimeline() throws ExpiredTransactionException, FutureStampedTransactionException {
         statistics.clear();
-        statistics.add(new Transaction(100D, System.currentTimeMillis() - 59000));
+        statistics.add(new Transaction(100D, System.currentTimeMillis() - (maxSeconds - 1) * 1000));
         statistics.moveTimeline();
 
         final StatisticsReport report = statistics.getReport();
