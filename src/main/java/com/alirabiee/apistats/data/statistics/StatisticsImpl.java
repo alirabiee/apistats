@@ -114,10 +114,7 @@ public class StatisticsImpl implements Statistics {
     private void updateStats() {
         reportLock.writeLock().lock();
         txCount = Arrays.stream(elements).map(StatElement::count).reduce(Integer::sum).orElse(0);
-        txSum = Arrays.stream(elements)
-                      .map(StatElement::sum)
-                      .reduce(Double::sum)
-                      .orElse(0D);
+        txSum = Arrays.stream(elements).map(StatElement::sum).reduce(Double::sum).orElse(0D);
         txMin = Arrays.stream(elements).map(StatElement::min).min(Double::compareTo).orElse(0D);
         txMax = Arrays.stream(elements).map(StatElement::max).max(Double::compareTo).orElse(0D);
         reportLock.writeLock().unlock();
