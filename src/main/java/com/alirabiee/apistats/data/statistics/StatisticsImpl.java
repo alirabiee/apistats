@@ -29,13 +29,14 @@ public class StatisticsImpl implements Statistics {
     private final ReadWriteLock reportLock = new ReentrantReadWriteLock(); // to synchronise access to the report data, tx*
 
     public StatisticsImpl(@Value("${history.max-seconds}") Integer maxSeconds) {
-        log.debug("maxSeconds = " + maxSeconds);
         this.elements = new StatElement[maxSeconds];
         this.oldestTimeIndex = 0;
         this.newestTimeIndex = this.elements.length - 1;
+
         for (int i = 0; i < this.elements.length; i++) {
             this.elements[i] = new StatElement();
         }
+
         clear();
     }
 
