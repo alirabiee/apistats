@@ -7,18 +7,18 @@ import com.alirabiee.apistats.data.Transaction;
  */
 public interface Statistics {
     /**
-     * Clear previous statistics data, O(1)
+     * Clear previous statistics data
      */
     void clear();
 
     /**
-     * Get latest available transaction report, O(1)
+     * Get latest available transaction report
      * @return The report data
      */
     StatisticsReport getReport();
 
     /**
-     * Add a transaction event to the history, O(lg 1)
+     * Add a transaction event to the history
      * @param tx The transaction to be added
      * @throws ExpiredTransactionException if the timestamp is outside of the range
      * @throws FutureStampedTransactionException if the timestamp is in the future

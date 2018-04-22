@@ -39,6 +39,9 @@ public class StatisticsImpl implements Statistics {
         clear();
     }
 
+    /**
+     * Clear previous statistics data
+     */
     @Override
     public void clear() {
         for (StatElement element : elements) {
@@ -48,6 +51,10 @@ public class StatisticsImpl implements Statistics {
         updateStats();
     }
 
+    /**
+     * Get latest available transaction report, O(1)
+     * @return The report data
+     */
     @Override
     public StatisticsReport getReport() {
         reportLock.readLock().lock();
@@ -57,6 +64,12 @@ public class StatisticsImpl implements Statistics {
         return report;
     }
 
+    /**
+     * Add a transaction event to the history, O(lg n)
+     * @param tx The transaction to be added
+     * @throws ExpiredTransactionException if the timestamp is outside of the range
+     * @throws FutureStampedTransactionException if the timestamp is in the future
+     */
     @Override
     public void add(Transaction tx) throws ExpiredTransactionException, FutureStampedTransactionException {
         final int second = (int) ((System.currentTimeMillis() - tx.getTimestamp()) / 1000);
@@ -102,13 +115,13 @@ public class StatisticsImpl implements Statistics {
      */
     private void updateStats() {
         reportLock.writeLock().lock();
-        txCount = Arrays.stream(elements).map(StatElement::count).reduce(Integer::sum).get();
+        txCount = Arrays.stream(elements).map(StatElement::count).reduce(Integer::sum).orElse(0);
         txSum = Arrays.stream(elements)
                       .map(StatElement::sum)
                       .reduce(Double::sum)
                       .orElse(0D);
-        txMin = Arrays.stream(elements).map(StatElement::min).min(Double::compareTo).get();
-        txMax = Arrays.stream(elements).map(StatElement::max).max(Double::compareTo).get();
+        txMin = Arrays.stream(elements).map(StatElement::min).min(Double::compareTo).orElse(0D);
+        txMax = Arrays.stream(elements).map(StatElement::max).max(Double::compareTo).orElse(0D);
         reportLock.writeLock().unlock();
     }
 
